@@ -2,7 +2,7 @@
 const servers = {
     iceServers: [
         {
-            urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+            urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302', 'stun:stun3.l.google.com:19302', 'stun:stun4.l.google.com:19302'],
         },
     ],
     iceCandidatePoolSize: 10,
@@ -140,7 +140,6 @@ socket.on('candidate', (data) => {
 // listen for call data
 
 socket.on('callData', async (data) => {
-
     data = { "offer": { "sdp": data.offer.sdp, "type": data.offer.type.toLowerCase() } };
     console.log("Call Data: ", data);
     const offer = data.offer;
