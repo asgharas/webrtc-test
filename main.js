@@ -132,7 +132,6 @@ socket.on('answer', (data) => {
 
 // listen for new ice candidate
 socket.on('candidate', (data) => {
-    data = { "offer": { "sdp": data.offer.sdp, "type": data.offer.type.toLowerCase() } };
     console.log("Candidate received: ", data);
     
     pc.addIceCandidate(new RTCIceCandidate(data));
@@ -141,6 +140,8 @@ socket.on('candidate', (data) => {
 // listen for call data
 
 socket.on('callData', async (data) => {
+
+    data = { "offer": { "sdp": data.offer.sdp, "type": data.offer.type.toLowerCase() } };
     console.log("Call Data: ", data);
     const offer = data.offer;
     pc.setRemoteDescription(new RTCSessionDescription(offer));
