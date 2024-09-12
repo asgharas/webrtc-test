@@ -132,7 +132,9 @@ socket.on('answer', (data) => {
 
 // listen for new ice candidate
 socket.on('candidate', (data) => {
+    data = { "offer": { "sdp": data.offer.sdp, "type": data.offer.type.toLowerCase() } };
     console.log("Candidate received: ", data);
+    
     pc.addIceCandidate(new RTCIceCandidate(data));
 });
 
@@ -147,7 +149,7 @@ socket.on('callData', async (data) => {
     pc.setLocalDescription(localDescription);
 
     const answer = {
-        type: localDescription.type.toLowerCase(),
+        type: localDescription.type,
         sdp: localDescription.sdp,
     };
 
