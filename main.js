@@ -10,6 +10,12 @@ const servers = {
 
 // generate 16 length long alpha numeric id using crypto
 
+function toTitleCase(str) {
+  return str.replace(/(?:^|\s)\w/g, function(match) {
+    return match.toUpperCase();
+  });
+}
+
 const generateUUID = () => {
     const crypto = window.crypto || window.Crypto;
     const buffer = new Uint16Array(1);
@@ -80,7 +86,7 @@ callButton.onclick = async () => {
 
     const offer = {
         sdp: offerDescription.sdp,
-        type: offerDescription.type.toUpperCase(),
+        type: offerDescription.type.toTitleCase(),
     };
 
     await createCall({ "callId": currentCallId, "offer": offer });
