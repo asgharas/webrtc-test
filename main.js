@@ -80,7 +80,7 @@ callButton.onclick = async () => {
 
     const offer = {
         sdp: offerDescription.sdp,
-        type: offerDescription.type,
+        type: offerDescription.type.toUpperCase(),
     };
 
     await createCall({ "callId": currentCallId, "offer": offer });
@@ -141,7 +141,7 @@ socket.on('callData', async (data) => {
     pc.setLocalDescription(localDescription);
 
     const answer = {
-        type: localDescription.type,
+        type: localDescription.type.toLowerCase(),
         sdp: localDescription.sdp,
     };
 
