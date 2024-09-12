@@ -86,7 +86,7 @@ callButton.onclick = async () => {
 
     const offer = {
         sdp: offerDescription.sdp,
-        type: offerDescription.type.toTitleCase(),
+        type: toTitleCase(offerDescription.type),
     };
 
     await createCall({ "callId": currentCallId, "offer": offer });
