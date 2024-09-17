@@ -56,6 +56,8 @@ webcamButton.onclick = async () => {
     // Pull tracks from remote stream, add to video stream
     pc.ontrack = (event) => {
         event.streams[0].getTracks().forEach((track) => {
+            console.log("Track added: ", track);
+            
             remoteStream.addTrack(track);
         });
     };
@@ -158,6 +160,13 @@ socket.on('callData', async (data) => {
     addAnswerToCall({ "callId": currentCallId, "answer": answer });
 });
 
+socket.on('offerCandidates', (data) => {
+    console.log("Offer Candidates: ", data);
+    data.forEach(candidate => {
+        pc.addIceCandidate(new RTCIceCandidate(candidate));
+    });
+});
+
 
 // api calls
 
@@ -180,6 +189,12 @@ const createCall = async (call) => {
 const getCallData = async (callId) => {
     if(socket.connected){
         socket.emit('getCallData', { "callId": callId });
+    }
+}
+
+const getOfferCandidates = async (callId) => {
+    if(socket.connected){
+        socket.emit('getOfferCandidates', { "callId": callId });
     }
 }
 
