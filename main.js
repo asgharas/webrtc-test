@@ -136,6 +136,12 @@ socket.on('answer', (data) => {
 // listen for new ice candidate
 socket.on('candidate', (data) => {
     console.log("Candidate received: ", data);
+    data = {
+        candidate: data.candidate,
+        sdpMid: data.sdpMid,
+        sdpMLineIndex: data.sdpMLineIndex,
+        usernameFragment: data.usernameFragment
+    }
     
     pc.addIceCandidate(new RTCIceCandidate(data));
 });
@@ -165,6 +171,12 @@ socket.on('callData', async (data) => {
 socket.on('offerCandidates', (data) => {
     console.log("Offer Candidates: ", data);
     data.forEach(candidate => {
+        candidate = {
+            candidate: candidate.candidate,
+            sdpMid: candidate.sdpMid,
+            sdpMLineIndex: candidate.sdpMLineIndex,
+            usernameFragment: candidate.usernameFragment
+        }
         pc.addIceCandidate(new RTCIceCandidate(candidate));
     });
 });
