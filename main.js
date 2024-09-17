@@ -129,6 +129,7 @@ socket.on('disconnect', () => {
 // listen for answer
 socket.on('answer', (data) => {
     console.log("Answer: ", data);
+    data = { "sdp": data.sdp, "type": data.type.toLowerCase() };
     pc.setRemoteDescription(new RTCSessionDescription(data));
 });
 
