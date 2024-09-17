@@ -158,6 +158,7 @@ socket.on('callData', async (data) => {
     console.log("Answer: ", answer);
 
     addAnswerToCall({ "callId": currentCallId, "answer": answer });
+    getOfferCandidates(currentCallId);
 });
 
 socket.on('offerCandidates', (data) => {
