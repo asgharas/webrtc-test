@@ -11,9 +11,9 @@ const servers = {
 // generate 16 length long alpha numeric id using crypto
 
 function toTitleCase(str) {
-  return str.replace(/(?:^|\s)\w/g, function(match) {
-    return match.toUpperCase();
-  });
+    return str.replace(/(?:^|\s)\w/g, function (match) {
+        return match.toUpperCase();
+    });
 }
 
 const generateUUID = () => {
@@ -28,7 +28,7 @@ const pc = new RTCPeerConnection(servers);
 let localStream = null;
 let remoteStream = null;
 let currentCallId = null;
-const userId = generateUUID(); 
+const userId = generateUUID();
 
 // HTML elements
 const webcamButton = document.getElementById('webcamButton');
@@ -45,7 +45,16 @@ const hangupButton = document.getElementById('hangupButton');
 // 1. Setup media sources
 
 webcamButton.onclick = async () => {
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    localStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: {
+            sampleRate: 48000, // Requesting 48 kHz
+            sampleSize: 16,    // Optional: Bit depth
+            channelCount: 2,   // Optional: Stereo
+            echoCancellation: true, // Optional: Enhance audio quality
+            noiseSuppression: true  // Optional: Reduce background noise
+        }
+    });
     remoteStream = new MediaStream();
 
     // Push tracks from local stream to peer connection
@@ -57,7 +66,7 @@ webcamButton.onclick = async () => {
     pc.ontrack = (event) => {
         event.streams[0].getTracks().forEach((track) => {
             console.log("Track added: ", track);
-            
+
             remoteStream.addTrack(track);
         });
     };
@@ -114,8 +123,8 @@ answerButton.onclick = async () => {
 
 // socket io
 const socket = io('https://chatmy.ai/', {
-  transports: ['websocket'],
-  query: {"userId": userId}
+    transports: ['websocket'],
+    query: { "userId": userId }
 });
 
 socket.on('connect', () => {
@@ -142,7 +151,7 @@ socket.on('candidate', (data) => {
         sdpMLineIndex: data.sdpMLineIndex,
         usernameFragment: data.usernameFragment
     }
-    
+
     pc.addIceCandidate(new RTCIceCandidate(data));
 });
 
@@ -186,35 +195,35 @@ socket.on('offerCandidates', (data) => {
 
 // save candidate
 const saveCandidate = async (candidate) => {
-    if(socket.connected){
+    if (socket.connected) {
         socket.emit('createCandidate', candidate);
     }
 }
 
 // creae call
 const createCall = async (call) => {
-     // check if socket is connected
-    if(socket.connected){
+    // check if socket is connected
+    if (socket.connected) {
         socket.emit('createCall', call);
     }
 }
 
 // get call data
 const getCallData = async (callId) => {
-    if(socket.connected){
+    if (socket.connected) {
         socket.emit('getCallData', { "callId": callId });
     }
 }
 
 const getOfferCandidates = async (callId) => {
-    if(socket.connected){
+    if (socket.connected) {
         socket.emit('getOfferCandidates', { "callId": callId });
     }
 }
 
 // add answer to call
 const addAnswerToCall = async (answer) => {
-    if(socket.connected){
+    if (socket.connected) {
         socket.emit('addAnswer', answer);
     } else {
         // show error by alert
